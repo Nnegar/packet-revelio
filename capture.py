@@ -17,6 +17,37 @@ class PacketCapture:
     
     def ptl_count(self):
         return Counter(packet.protocol for packet in self.packets)
+    
+    
+    
+    def top_talkers(self, by = "packets"):
+        
+        counts={}
+        
+        for packet in self.packets:
+            key = packet.src_ip
+            
+            if by == "packets":
+                value = 1
+                
+            elif by == "bytes":
+                value = packet.length
+                
+            else:
+                raise ValueError("Error in name argument")
+            
+            
+            counts[key] = counts.get(key, 0) + value
+        
+        return dict(sorted(
+            counts.items(),
+            key= lambda item: item[1], 
+            reverse = True))
+        
+        
+        
+    def get_packet_lengths(self):
+        return [packet.length for packet in self.packets]
         
         
                 
