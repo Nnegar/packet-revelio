@@ -20,6 +20,13 @@ class PacketCapture:
     
     
     
+    
+    
+    
+    
+    
+    
+    #returns the ips that have max packets or max data based on name argument by
     def top_talkers(self, by = "packets"):
         
         counts={}
@@ -45,15 +52,10 @@ class PacketCapture:
             reverse = True))
         
         
-        
+    #right now for ploting histograg   
     def get_packet_lengths(self):
         return [packet.length for packet in self.packets]
         
-        
-                
-                
-        
-    
             
     
     def __str__(self):
