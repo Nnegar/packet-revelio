@@ -4,28 +4,24 @@ from collections import Counter
 
 
 class PacketCapture:
-    def __init__(self, path):
-        self.packets = []
-        df = pd.read_csv(path)
-        for _, raw in df.iterrows():
-            data = raw.to_dict()
-            packet = Packet(data)
-            self.packets.append(packet)
+    def __init__(self, packets):
+        self.packets = list(packets)
+
             
-            
+    def __iter__(self):
+        return iter(self.packets)
     
+    def __len__(self):
+        return len(self.packets)
+
+    def __getitem__(self, index):
+        return self.packets[index]
+            
     
     def ptl_count(self):
         return Counter(packet.protocol for packet in self.packets)
     
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     #returns the ips that have max packets or max data based on name argument by
     def top_talkers(self, by = "packets"):
         
