@@ -15,8 +15,8 @@ class Visualizer:
         
         
         
-        
-    def format_result(self, counts):
+    @staticmethod  
+    def format_result(counts):
     
         lines = []
         max_len = max(len(key) for key in counts.keys())
