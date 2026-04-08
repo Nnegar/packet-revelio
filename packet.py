@@ -1,5 +1,7 @@
 #data structure fo packets
 #attributes for now: src_ip, dst_ip, src_port, dst_port, protocol
+from datetime import datetime
+
 
 TCP_SERVICES = {
                 80: "HTTP",
@@ -45,7 +47,7 @@ LENGTH_THRESHOLD = 1500
 class Packet:
     def __init__(self, data):
         self.packet_id = int(data["packet_id"])
-        self.time_stamp = data["timestamp"]
+        self.time_stamp = datetime.strptime(data["timestamp"], "%Y-%m-%d %H:%M:%S")
         self.src_ip = data["source ip"]
         self.dst_ip = data["destination ip"]
         self.protocol = data["protocol"]

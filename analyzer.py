@@ -30,3 +30,19 @@ class PacketAnalyzer:
         sorted_counts = (sorted(counts.items(),key= lambda item: item[1], reverse = True))
         
         return sorted_counts[:limit]
+    
+    
+    @staticmethod
+    def longest_flow(flows):
+        if not flows:
+            return None
+        
+        return max(flows, key = lambda f: f.duration)
+    
+    
+    @staticmethod
+    def top_flows(flows, number=3):
+        if not flows:
+            return []
+        sorted_flows = sorted(flows, key=lambda f:f.duration, reverse = True)
+        return sorted_flows[:number]
