@@ -1,9 +1,9 @@
-from capture import PacketCapture
-import packet
-from visualizer import Visualizer
-from readers import CsvPacketReader
-from analyzer import PacketAnalyzer
-from flow import Flow
+from models.capture import PacketCapture
+import models.packet as packet
+from analysis.visualizer import Visualizer
+from utils.readers import CsvPacketReader
+from analysis.analyzer import PacketAnalyzer
+from models.flow import Flow
 
 packets = CsvPacketReader.read("./data/sample2.csv")
 capture = PacketCapture(packets)

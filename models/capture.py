@@ -1,5 +1,5 @@
 import pandas as pd
-from packet import Packet
+from models.packet import Packet
 from collections import Counter
 
 

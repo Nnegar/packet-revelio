@@ -1,7 +1,6 @@
 #input data
 import pandas as pd
-from packet import Packet
-import sys
+from models.packet import Packet
 
 
 
