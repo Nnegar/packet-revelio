@@ -37,7 +37,7 @@ class PacketCapture:
         lines = []
         for packet in self.packets:
             lines.append( f"""Id: {packet.packet_id} 
-    timestamp: {packet.time_stamp} 
+    timestamp: {packet.timestamp} 
     source IP: {packet.src_ip}
     destination IP: {packet.dst_ip}
     protocol: {packet.protocol}

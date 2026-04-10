@@ -1,6 +1,7 @@
 #input data
 import pandas as pd
 from models.packet import Packet
+from utils.parser import parse_packet_row
 
 
 
@@ -12,7 +13,7 @@ class CsvPacketReader:
             packets = []
             
             for _, raw in df.iterrows():
-                data = raw.to_dict()
+                data = parse_packet_row(raw.to_dict())
                 packet = Packet(data)
                 packets.append(packet)
             return packets

@@ -11,8 +11,8 @@ class Flow:
         self.dst_port = packet.dst_port
         self.packet_count = 1
         self.total_bytes = packet.length
-        self.start_time = packet.time_stamp
-        self.end_time = packet.time_stamp
+        self.start_time = packet.timestamp
+        self.end_time = packet.timestamp
         self.duration = 0
         
         
@@ -38,10 +38,10 @@ class Flow:
     def add_packet(self, packet):
         self.packet_count += 1
         self.total_bytes += packet.length
-        if packet.time_stamp > self.end_time:
-            self.end_time = packet.time_stamp
-        elif packet.time_stamp < self.start_time:
-            self.start_time = packet.time_stamp
+        if packet.timestamp > self.end_time:
+            self.end_time = packet.timestamp
+        elif packet.timestamp < self.start_time:
+            self.start_time = packet.timestamp
         self.duration = self.end_time - self.start_time
         
     @staticmethod

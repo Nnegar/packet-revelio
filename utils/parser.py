@@ -1,3 +1,7 @@
+from datetime import datetime
+import ipaddress
+
+
 # raw CSV → internal schema
 FIELD_MAPPING = {
     "packet_id": "packet_id",
@@ -36,32 +40,8 @@ VALID_PROTOCOLS = {
 
 
 
-def parse_packet_row(raw_row):
-    # 1. rename fields
-    data = map_fields(raw_row)
-    
-    # 2. validate required fields
-    validate_required_fields(data)
-    
-    # 3. normalize values
-    data["protocol"] = validate_protocol(data["protocol"])
-    ***************************************************************
-    # 4. convert types
-    data["packet_id"] = parse_int(data["packet_id"], "packet_id")
-    data["src_port"] = parse_int(data["src_port"], "src_port")
-    data["dst_port"] = parse_int(data["dst_port"], "dst_port")
-    data["length"] = parse_int(data["length"], "length")
-    data["timestamp"] = parse_timestamp(data["timestamp"])
-    data["src_ip"] = parse_ip(data["src_ip"],"src_ip")
-    data["dst_ip"] = parse_ip(data["dst_ip"],"dst_ip")
-    
-    # 5. (optional) extra validation
-    if data["length"] < 0:
-        raise ValueError("Packet length cannot be negative")
-    
-    return data
 
-def map_field(raw):
+def map_fields(raw):
     mapped = {}
     for raw_key, internal_key in FIELD_MAPPING.items():
         if raw_key in raw:
@@ -86,3 +66,59 @@ def validate_protocol(protocol):
             return protocol.strip().upper()
         raise ValueError("Invalid protocol")
     raise TypeError("Protocol must be a string")
+
+
+def parse_int(value, key):
+    try:
+        value = int(value)  
+        
+    except ValueError:
+        raise ValueError(f"{key} should be a number")
+    
+    if key == "packet_id" and value>=0:
+        return value
+    elif (key == "dst_port" or key == "src_port") and 0<=value<=65535:
+        return value
+    elif key == "length" and value >=0:
+        return value
+
+    raise ValueError(f"{key} = {value} is not valid")
+        
+        
+        
+def parse_timestamp(value):
+    try:
+        value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+        return value
+    except ValueError:
+        raise ValueError(f"Invalid timestamp: {value}")
+        
+            
+def parse_ip(value, key):
+    try:
+        return str(ipaddress.ip_address(value))
+    except (ValueError, TypeError):
+        raise ValueError(f"Invalid IP address for {key}: {value}")
+    
+    
+    
+def parse_packet_row(raw_row):
+    # 1. rename fields
+    data = map_fields(raw_row)
+    
+    # 2. validate required fields
+    validate_required_fields(data)
+    
+    # 3. normalize values
+    data["protocol"] = validate_protocol(data["protocol"])
+   
+    # 4. convert types
+    data["packet_id"] = parse_int(data["packet_id"], "packet_id")
+    data["src_port"] = parse_int(data["src_port"], "src_port")
+    data["dst_port"] = parse_int(data["dst_port"], "dst_port")
+    data["length"] = parse_int(data["length"], "length")
+    data["timestamp"] = parse_timestamp(data["timestamp"])
+    data["src_ip"] = parse_ip(data["src_ip"],"src_ip")
+    data["dst_ip"] = parse_ip(data["dst_ip"],"dst_ip")
+    
+    return data

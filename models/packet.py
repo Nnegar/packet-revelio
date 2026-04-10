@@ -46,14 +46,14 @@ LENGTH_THRESHOLD = 1500
 
 class Packet:
     def __init__(self, data):
-        self.packet_id = int(data["packet_id"])
-        self.time_stamp = datetime.strptime(data["timestamp"], "%Y-%m-%d %H:%M:%S")
-        self.src_ip = data["source ip"]
-        self.dst_ip = data["destination ip"]
+        self.packet_id = data["packet_id"]
+        self.timestamp = data["timestamp"]
+        self.src_ip = data["src_ip"]
+        self.dst_ip = data["dst_ip"]
         self.protocol = data["protocol"]
-        self.src_port = int(data["source port"])
-        self.dst_port = int(data["destination port"])
-        self.length = int(data["length"])
+        self.src_port = data["src_port"]
+        self.dst_port = data["dst_port"]
+        self.length = data["length"]
       
       
         
@@ -64,12 +64,12 @@ class Packet:
     def to_dict(self):
         return {
             "packet_id":self.packet_id,
-            "timestamp": self.time_stamp,
-            "source ip": self.src_ip,
-            "destination ip": self.dst_ip,
+            "timestamp": self.timestamp,
+            "src_ip": self.src_ip,
+            "dst_ip": self.dst_ip,
             "protocol": self.protocol,
-            "source port":self.src_port,
-            "destination port": self.dst_port,
+            "src_port":self.src_port,
+            "dst_port": self.dst_port,
             "length": self.length
         }
         
