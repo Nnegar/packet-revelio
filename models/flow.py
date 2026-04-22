@@ -13,7 +13,6 @@ class Flow:
         self.total_bytes = packet.length
         self.start_time = packet.timestamp
         self.end_time = packet.timestamp
-        self.duration = 0
         
         
     def __str__(self):
@@ -42,7 +41,7 @@ class Flow:
             self.end_time = packet.timestamp
         elif packet.timestamp < self.start_time:
             self.start_time = packet.timestamp
-        self.duration = self.end_time - self.start_time
+
         
     @staticmethod
     def build_flows(capture):
@@ -55,5 +54,25 @@ class Flow:
                 flows[key] = Flow(packet)
         
         return list(flows.values())
-                
-            
+
+    @property
+    def average_packet_size(self):
+        return self.total_bytes/self.packet_count
+    
+    @property
+    def duration(self):
+        delta = self.end_time - self.start_time
+        return delta.total_seconds()
+    
+    @property
+    def packets_per_second(self):
+        if not self.duration == 0:
+            return self.packet_count/self.duration
+        return None
+    
+    @property
+    def bytes_per_second(self):
+        if not self.duration == 0:
+            return self.total_bytes/self.duration
+        return None
+         

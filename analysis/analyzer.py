@@ -41,8 +41,16 @@ class PacketAnalyzer:
     
     
     @staticmethod
-    def top_flows(flows, number=3):
+    def top_flows(flows, number=3, sort_item="duration"):
         if not flows:
             return []
-        sorted_flows = sorted(flows, key=lambda f:f.duration, reverse = True)
+        match sort_item:
+            case "duration":
+                sorted_flows = sorted(flows, key=lambda f:f.duration, reverse = True)
+            case "packets":
+                sorted_flows = sorted(flows, key=lambda f:f.packets_per_second if f.packets_per_second is not None else 0, reverse = True)
+            case "bytes":
+                sorted_flows = sorted(flows, key=lambda f:f.bytes_per_second if f.bytes_per_second is not None else 0, reverse = True)
+            case _:
+                raise ValueError("sortindg Item is not correct. It should be 'duration', 'packets' for packet per second or 'bytes' for bytes per second")
         return sorted_flows[:number]
