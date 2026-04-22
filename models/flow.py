@@ -13,6 +13,10 @@ class Flow:
         self.total_bytes = packet.length
         self.start_time = packet.timestamp
         self.end_time = packet.timestamp
+        self.forward_count = 1
+        self.forward_bytes = packet.length
+        self.backward_count = 0
+        self.backward_bytes = 0
         
         
     def __str__(self):
@@ -37,17 +41,29 @@ class Flow:
     def add_packet(self, packet):
         self.packet_count += 1
         self.total_bytes += packet.length
-        if packet.timestamp > self.end_time:
-            self.end_time = packet.timestamp
-        elif packet.timestamp < self.start_time:
-            self.start_time = packet.timestamp
+        self.start_time = min(self.start_time, packet.timestamp)
+        self.end_time = max(self.end_time, packet.timestamp)
+        
+        #check backward or forward packets
+        if packet.src_ip == self.src_ip and packet.src_port == self.src_port:
+            self.forward_count += 1
+            self.forward_bytes += packet.length
+        elif packet.src_ip == self.dst_ip and packet.src_port == self.dst_port:
+            self.backward_count += 1
+            self.backward_bytes += packet.length
+            
 
         
     @staticmethod
     def build_flows(capture):
         flows = {}
         for packet in capture:
-            key = (packet.src_ip,packet.dst_ip,packet.protocol,packet.src_port, packet.dst_port)
+            
+            #to put both forward and backward packets in the same flow
+            endpoint1 = (packet.src_ip, packet.src_port)
+            endpoint2 = (packet.dst_ip, packet.dst_port)
+            endpoints = tuple(sorted([endpoint1, endpoint2]))
+            key = (endpoints, packet.protocol)
             if key in flows:
                 flows[key].add_packet(packet)
             else:
@@ -75,4 +91,3 @@ class Flow:
         if not self.duration == 0:
             return self.total_bytes/self.duration
         return None
-         
